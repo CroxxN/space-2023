@@ -15,7 +15,7 @@ import cv2
 from midi2audio import FluidSynth
 
 class Sonify:
-    def __init__(image=None, soundfont_path=None)):
+    def __init__(self, image=None, soundfont_path=None):
         self.im = image
         self.midipath = './generated_midi.mid' 
         self.audio = './generated_audio.mp3' 
@@ -100,7 +100,7 @@ class Sonify:
     def midi_to_audio(self):
 
         # Create a FluidSynth instance with the specified soundfont
-        fs = FluidSynth(self.soundfont_file)
+        fs = FluidSynth(self.soundfont_path)
 
         # Convert MIDI to WAV (temporary)
         temp_wav = 'temp.wav'
@@ -119,10 +119,10 @@ class Sonify:
         img = ImageClip(image_path, duration=duration)
 
         # Create a video with the single frame
-        video = img.to_videofile(self.video_path, codec='libx264', fps=24)
+        video = img.to_videofile(self.output_video_path, codec='libx264', fps=24)
 
     def decorate_video(self):
-        video_capture = cv2.VideoCapture(self.video_path)
+        video_capture = cv2.VideoCapture(self.output_video_path)
         h = int(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
         w = int(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
         video_capture.release()

@@ -1,8 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import os
 from util import Sonify
 
 app = Flask(__name__)
+
+
+@app.route('/')
+def index():
+    return 'Hello World!'
+
 
 @app.route('/api/generate', methods=['POST'])
 def generate():
@@ -24,18 +30,15 @@ def generate():
         # from PIL import Image
         # img = Image.open(image_file)
 
-        return jsonify({"message": "Image uploaded successfully"})
-
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
     sonify = Sonify(image=image_file)
     sonify.run()
     result = sonify.output_video_path
     os.remove(result)
-    return sendfile(result, as_attachment=True, mimetype='video/mp4')
+    return send_file(result, as_attachment=True, mimetype='video/mp4')
 
-    
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
